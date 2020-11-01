@@ -6,6 +6,8 @@
             "email": "webgleb@gmail.com"
         }
     ],
+    "version":  "1.0.0",
+    "description": "PHP class for password validation",
     "license": "MIT",
     "require": {
         "php": ">=5.2.0"
@@ -15,7 +17,8 @@
     },
     "autoload": {
         "psr-4": {
-            "PHPPasswordValidator\\": "src/"
+            "Php\\Password\\Validator\\": "src/",
+            "Php\\Password\\Validator\\Tests\\": "tests/"
         }
     }
 }

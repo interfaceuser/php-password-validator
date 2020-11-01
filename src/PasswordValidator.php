@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PHPPasswordValidator;
+namespace Php\Password\Validator;
 
 
 class PasswordValidator
@@ -90,13 +90,13 @@ class PasswordValidator
            'ru' => [
                'minLength' => str_replace(
                    '#minlength#',
-                   self::rusWordForm($this->options['minLength'], ['символ', 'символа', 'символов']),
-                   'Минимальная длина пароля #minlength#.'
+                   $this->options['minLength'],
+                   'Минимальная длина пароля #minlength# символ(ов).'
                ),
                'maxLength' => str_replace(
                    '#maxlength#',
-                   self::rusWordForm($this->options['maxLength'], ['символ', 'символа', 'символов']),
-                   'Максимальная длина пароля #maxlength#.'
+                   $this->options['maxLength'],
+                   'Максимальная длина пароля #maxlength# символ(ов).'
                ),
                'containNumbers' => 'Пароль должен содержать хотя бы одну цифру.',
                'minNumbers' => str_replace(
@@ -133,29 +133,6 @@ class PasswordValidator
        ];
 
         return (isset($errors[$this->options['lang']][$error])) ? $errors[$this->options['lang']][$error] : $errors['en'][$error];
-    }
-
-
-    /**
-     * Return form of russian words after numbers.
-     * @param int $num
-     * @param array $words
-     * @return string
-     */
-    private function rusWordForm(int $num, array $words): string
-    {
-        $num = abs($num) % 100;
-        $num_x = $num % 10;
-        if ($num > 10 && $num < 20) {
-            return $num . ' '. $words[2];
-        }
-        if ($num_x > 1 && $num_x < 5) {
-            return $num . ' '. $words[1];
-        }
-        if ($num_x == 1) {
-            return $num . ' '. $words[0];
-        }
-        return $num . ' '. $words[2];
     }
 
     /**
