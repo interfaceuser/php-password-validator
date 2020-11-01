@@ -1,0 +1,21 @@
+{
+    "name": "glebvarganov/php-password-validator",
+    "authors": [
+        {
+            "name": "Gleb Varganov",
+            "email": "webgleb@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPPasswordValidator\\": "src/"
+        }
+    }
+}
