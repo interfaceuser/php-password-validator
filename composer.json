@@ -6,7 +6,7 @@
             "email": "webgleb@gmail.com"
         }
     ],
-    "version":  "1.0.0",
+    "version":  "0.1",
     "description": "PHP class for password validation",
     "license": "MIT",
     "require": {
