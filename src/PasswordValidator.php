@@ -36,6 +36,17 @@ class PasswordValidator
     }
 
     /**
+     * Склоняет числительное
+     * @param $n
+     * @param $titles
+     * @return mixed
+     */
+    protected function number($titles, $n = 1) {
+        $cases = array(2, 0, 1, 1, 1, 2);
+        return $titles[($n % 100 > 4 && $n % 100 < 20) ? 2 : $cases[min($n % 10, 5)]];
+    }
+
+    /**
      * Return error, based on options language
      * @param string $error
      * @param string $subject
@@ -43,61 +54,50 @@ class PasswordValidator
      */
     private function getError($error, $subject = ''): string
     {
-       $errors = [
-           'en' => [
-               'minLength' => str_replace(
-                   '#minlength#',
-                   $this->options['minLength'],
-                   'Minimum password length is #minlength# character(s).'
-               ),
-               'maxLength' => str_replace(
-                   '#maxlength#',
-                   $this->options['maxLength'],
-                   'Maximum password length is #maxlength# character(s).'
-               ),
-               'containNumbers' => 'Password should contain at least one number.',
-               'minNumbers' => str_replace(
-                   ['#minnumbers#', '#countnumbers#'],
-                   [$this->options['minNumbers'], self::countNumbers($subject)],
-                   'The minimum number of digits in a password is #minnumbers#. You have #countnumbers#.'
-               ),
-               'maxNumbers' => str_replace(
-                   ['#maxnumbers#', '#countnumbers#'],
-                   [$this->options['maxNumbers'], self::countNumbers($subject)],
-                   'The maximum number of digits in a password is #maxnumbers#. You have #countnumbers#.'
-               ),
-               'containLetters' => 'Password should contain at least one letter.',
-               'minLetters' => str_replace(
-                   ['#minletters#', '#countletters#'],
-                   [$this->options['minLetters'], self::countLetters($subject)],
-                   'The minimum number of letters in a password is #minletters#. You have #countletters#.'
-               ),
-               'maxLetters' => str_replace(
-                   ['#maxletters#', '#countletters#'],
-                   [$this->options['maxLetters'], self::countLetters($subject)],
-                   'The maximum number of letters in a password is #maxletters#. You have #countletters#.'
-               ),
-               'lowerLetters' => 'Password must contain at least one lowercase letter.',
-               'upperLetters' => 'Password must contain at least one uppercase letter.',
-               'containSymbols' => 'Password should contain at least one symbol.',
-               'availableSymbols' => str_replace(
-                   '#availablesymbols#',
-                   $this->options['availableSymbols'],
-                   'You are using prohibited characters. The list of allowed characters #availablesymbols#.'
-               ),
-               'availableSpaces' => 'Password cannot contain spaces.',
-           ],
-           'ru' => [
-               'minLength' => str_replace(
-                   '#minlength#',
-                   $this->options['minLength'],
-                   'Минимальная длина пароля #minlength# символ(ов).'
-               ),
-               'maxLength' => str_replace(
-                   '#maxlength#',
-                   $this->options['maxLength'],
-                   'Максимальная длина пароля #maxlength# символ(ов).'
-               ),
+        $errors['en'] = [
+            'minLength' => str_replace(
+                '#minlength#',
+                $this->options['minLength'],
+                'Minimum password length is #minlength# character(s).'
+            ),
+            'maxLength' => str_replace(
+                '#maxlength#',
+                $this->options['maxLength'],
+                'Maximum password length is #maxlength# character(s).'
+            ),
+            'containNumbers' => 'Password should contain at least one number.',
+            'minNumbers' => str_replace(
+                ['#minnumbers#', '#countnumbers#'],
+                [$this->options['minNumbers'], self::countNumbers($subject)],
+                'The minimum number of digits in a password is #minnumbers#. You have #countnumbers#.'
+            ),
+            'maxNumbers' => str_replace(
+                ['#maxnumbers#', '#countnumbers#'],
+                [$this->options['maxNumbers'], self::countNumbers($subject)],
+                'The maximum number of digits in a password is #maxnumbers#. You have #countnumbers#.'
+            ),
+            'containLetters' => 'Password should contain at least one letter.',
+            'minLetters' => str_replace(
+                ['#minletters#', '#countletters#'],
+                [$this->options['minLetters'], self::countLetters($subject)],
+                'The minimum number of letters in a password is #minletters#. You have #countletters#.'
+            ),
+            'maxLetters' => str_replace(
+                ['#maxletters#', '#countletters#'],
+                [$this->options['maxLetters'], self::countLetters($subject)],
+                'The maximum number of letters in a password is #maxletters#. You have #countletters#.'
+            ),
+            'lowerLetters' => 'Password must contain at least one lowercase letter.',
+            'upperLetters' => 'Password must contain at least one uppercase letter.',
+            'containSymbols' => 'Password should contain at least one symbol.',
+            'availableSymbols' => str_replace(
+                '#availablesymbols#',
+                $this->options['availableSymbols'],
+                'You are using prohibited characters. The list of allowed characters #availablesymbols#.'
+            ),
+            'availableSpaces' => 'Password cannot contain spaces.',
+        ];
+        $errors['ru'] = [
                'containNumbers' => 'Пароль должен содержать хотя бы одну цифру.',
                'minNumbers' => str_replace(
                    ['#minnumbers#', '#countnumbers#'],
@@ -126,11 +126,18 @@ class PasswordValidator
                'availableSymbols' => str_replace(
                    '#availablesymbols#',
                    $this->options['availableSymbols'],
-                   'Вы используйте запрещенные символы. Список разрешенных символов #availablesymbols#.'
+                   'Вы используете запрещенные символы. Список разрешенных символов #availablesymbols#.'
                ),
                'availableSpaces' => 'Пароль не может содержать пробелы.',
-           ],
-       ];
+           ];
+
+        $errors['ru']['minLength'] = 'Минимальная длина пароля '
+            . $this->options['minLength'] . ' '
+            . $this->number(['символ', 'символа', 'символов'], $this->options['minLength'] );
+
+        $errors['ru']['maxLength'] = 'Максимальная длина пароля '
+            . $this->options['maxLength'] . ' '
+            . $this->number(['символ', 'символа', 'символов'], $this->options['maxLength'] );
 
         return (isset($errors[$this->options['lang']][$error])) ? $errors[$this->options['lang']][$error] : $errors['en'][$error];
     }
